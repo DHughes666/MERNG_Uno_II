@@ -96,15 +96,26 @@ const mutations = new graphql_1.GraphQLObjectType({
                 title: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
                 content: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
                 // date: { type: new GraphQLNonNull(GraphQLString)},
+                user: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) },
             },
-            async resolve(parent, { title, content }) {
+            async resolve(parent, { title, content, user }) {
                 let blog;
+                const session = await (0, mongoose_1.startSession)();
                 try {
-                    blog = new Blog_1.default({ title, content });
-                    return await blog.save();
+                    session.startTransaction({ session });
+                    blog = new Blog_1.default({ title, content, user });
+                    const existingUser = await Users_1.default.findById(user);
+                    if (!existingUser)
+                        return new Error("User not found");
+                    existingUser.blogs.push(blog);
+                    await existingUser.save({ session });
+                    return await blog.save({ session });
                 }
                 catch (e) {
                     console.log(e.message);
+                }
+                finally {
+                    await session.commitTransaction();
                 }
             }
         },
@@ -137,14 +148,26 @@ const mutations = new graphql_1.GraphQLObjectType({
             },
             async resolve(parent, { id }) {
                 let existingBlog;
+                const session = await (0, mongoose_1.startSession)();
                 try {
-                    existingBlog = await Blog_1.default.findById(id);
+                    session.startTransaction({ session });
+                    existingBlog = await Blog_1.default.findById(id).populate("user");
+                    //@ts-ignore
+                    const existingUser = existingBlog?.user;
+                    if (!existingUser)
+                        return new Error("No user linked to this blog");
                     if (!existingBlog)
                         return new Error("No blog found");
-                    return await Blog_1.default.findByIdAndRemove(id);
+                    existingUser.blogs.pull(existingBlog);
+                    await existingUser.save({ session });
+                    //@ts-ignore
+                    return await existingBlog.remove({ session });
                 }
                 catch (e) {
                     console.log(e.message);
+                }
+                finally {
+                    session.commitTransaction();
                 }
             }
         }

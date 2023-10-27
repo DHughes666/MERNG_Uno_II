@@ -141,6 +141,7 @@ const mutations = new graphql_1.GraphQLObjectType({
                 }
             }
         },
+        // delete blog
         deleteBlog: {
             type: schema_1.BlogType,
             args: {
@@ -161,13 +162,82 @@ const mutations = new graphql_1.GraphQLObjectType({
                     existingUser.blogs.pull(existingBlog);
                     await existingUser.save({ session });
                     //@ts-ignore
-                    return await existingBlog.remove({ session });
+                    return await existingBlog.deleteOne({ session });
                 }
                 catch (e) {
                     console.log(e.message);
                 }
                 finally {
                     session.commitTransaction();
+                }
+            }
+        },
+        // add comment to blog
+        addCommentToBlog: {
+            type: schema_1.CommentType,
+            args: {
+                blog: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) },
+                user: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) },
+                text: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
+            },
+            async resolve(parent, { blog, user, text }) {
+                const session = await (0, mongoose_1.startSession)();
+                let comment;
+                try {
+                    session.startTransaction({ session });
+                    const existingUser = await Users_1.default.findById(user);
+                    const existingBlog = await Blog_1.default.findById(blog);
+                    if (!existingBlog || !existingUser)
+                        return new Error("User or Blog does not exist");
+                    comment = new Comment_1.default({ text, blog, user });
+                    existingUser.comments.push(comment);
+                    existingBlog.comments.push(comment);
+                    await existingBlog.save({ session });
+                    await existingUser.save({ session });
+                    return await comment.save({ session });
+                }
+                catch (err) {
+                    return new Error(err.message);
+                }
+                finally {
+                    await session.commitTransaction();
+                }
+            },
+        },
+        // Delete a comment from blog
+        deleteComment: {
+            type: schema_1.CommentType,
+            args: {
+                id: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) }
+            },
+            async resolve(parent, { id }) {
+                let comment;
+                const session = await (0, mongoose_1.startSession)();
+                try {
+                    session.startTransaction({ session });
+                    comment = await Comment_1.default.findById(id);
+                    if (!comment)
+                        return new Error("Comment not found");
+                    //@ts-ignore
+                    const existingUser = await Users_1.default.findById(comment?.user);
+                    if (!existingUser)
+                        return new Error("User not found");
+                    //@ts-ignore
+                    const existingBlog = await Blog_1.default.findById(comment?.blog);
+                    if (!existingBlog)
+                        return new Error("Blog not found");
+                    existingUser.comments.pull(comment);
+                    existingBlog.comments.pull(comment);
+                    await existingUser.save({ session });
+                    await existingBlog.save({ session });
+                    //@ts-ignore
+                    return await comment.deleteOne({ session });
+                }
+                catch (err) {
+                    return new Error(err.message);
+                }
+                finally {
+                    await session.commitTransaction();
                 }
             }
         }

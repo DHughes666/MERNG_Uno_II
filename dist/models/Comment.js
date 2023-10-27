@@ -8,7 +8,7 @@ const commentSchema = new mongoose_1.Schema({
     },
     date: {
         type: Date,
-        required: true,
+        default: Date.now()
     },
     blog: {
         type: mongoose_1.Schema.Types.ObjectId,

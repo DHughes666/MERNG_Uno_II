@@ -149,6 +149,7 @@ const mutations = new GraphQLObjectType({
                 }
             }
         },
+        // delete blog
         deleteBlog: {
             type: BlogType,
             args: {
@@ -167,11 +168,73 @@ const mutations = new GraphQLObjectType({
                     existingUser.blogs.pull(existingBlog);
                     await existingUser.save({session});
                     //@ts-ignore
-                    return await existingBlog.remove({session});
+                    return await existingBlog.deleteOne({session});
                 } catch (e) {
                     console.log(e.message);
                 } finally {
                     session.commitTransaction();
+                }
+            }
+        },
+        // add comment to blog
+        addCommentToBlog: {
+            type: CommentType,
+            args: {
+                blog: {type: new GraphQLNonNull(GraphQLID)},
+                user: {type: new GraphQLNonNull(GraphQLID)},
+                text: {type: new GraphQLNonNull(GraphQLString)},
+            },
+            async resolve(parent, {blog, user, text}) {
+                const session = await startSession();
+                let comment: Document<any, any, any>;
+                try {
+                    session.startTransaction({session});
+                    const existingUser = await User.findById(user);
+                    const existingBlog = await Blog.findById(blog);
+                    if(!existingBlog || !existingUser) 
+                        return new Error("User or Blog does not exist");
+                    comment = new Comment({text, blog, user});
+                    existingUser.comments.push(comment);
+                    existingBlog.comments.push(comment);
+                    await existingBlog.save({session});
+                    await existingUser.save({session});
+                    return await comment.save({session});
+                } catch (err) {
+                    return new Error(err.message)
+                } finally {
+                    await session.commitTransaction();
+                }
+            },
+        },
+        // Delete a comment from blog
+        deleteComment: {
+            type: CommentType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLID)}
+            },
+            async resolve(parent, {id}){
+                let comment: DocumentType;
+                const session = await startSession();
+                try {
+                    session.startTransaction({session});
+                    comment = await Comment.findById(id);
+                    if(!comment) return new Error("Comment not found");
+                    //@ts-ignore
+                    const existingUser = await User.findById(comment?.user);
+                    if(!existingUser) return new Error("User not found");
+                    //@ts-ignore
+                    const existingBlog = await Blog.findById(comment?.blog);
+                    if(!existingBlog) return new Error("Blog not found");
+                    existingUser.comments.pull(comment);
+                    existingBlog.comments.pull(comment);
+                    await existingUser.save({session});
+                    await existingBlog.save({session});
+                    //@ts-ignore
+                    return await comment.deleteOne({session});
+                } catch (err) {
+                    return new Error(err.message);
+                } finally {
+                    await session.commitTransaction();
                 }
             }
         }

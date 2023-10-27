@@ -7,7 +7,7 @@ const commentSchema: Schema = new Schema({
     },
     date: {
         type: Date,
-        required: true,
+        default: Date.now()
     },
     blog: {
         type: Schema.Types.ObjectId,

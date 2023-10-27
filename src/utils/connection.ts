@@ -12,6 +12,6 @@ export const connectToDatabase = async() => {
         });
     } catch (err) {
         console.log(err);
-        
+        throw new Error(err);
     }
 }

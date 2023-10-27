@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_1 = require("graphql");
+// const bcrypt = require('bcryptjs');
+const bcryptjs_1 = require("bcryptjs");
 const Users_1 = __importDefault(require("../models/Users"));
 const Blog_1 = __importDefault(require("../models/Blog"));
 const Comment_1 = __importDefault(require("../models/Comment"));
@@ -50,16 +52,43 @@ const mutations = new graphql_1.GraphQLObjectType({
                 try {
                     existingUser = await Users_1.default.findOne({ email });
                     if (existingUser)
-                        return new Error("User already exist");
-                    const user = new Users_1.default({ name, email, password });
+                        return new Error("User already exists");
+                    //Hash password
+                    const securePassword = (0, bcryptjs_1.hashSync)(password);
+                    const user = new Users_1.default({ name, email, password: securePassword });
                     return await user.save();
                 }
                 catch (e) {
-                    return new Error("User Signup Failed. Try again");
+                    return new Error(`User Signup Failed. Try again ${e}`);
+                }
+            }
+        },
+        // user login
+        login: {
+            type: schema_1.UserType,
+            args: {
+                email: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
+                password: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
+            },
+            async resolve(parent, { email, password }) {
+                let existingUser;
+                try {
+                    existingUser = await Users_1.default.findOne({ email });
+                    if (!existingUser)
+                        return new Error("No user Registered with this email");
+                    const decryptedPassword = (0, bcryptjs_1.compareSync)(password, 
+                    // @ts-ignore                        
+                    existingUser?.password);
+                    if (!decryptedPassword)
+                        return new Error("Incorrect password");
+                    return existingUser;
+                }
+                catch (err) {
+                    console.log(err.message);
                 }
             }
         }
     }
 });
-exports.default = new graphql_1.GraphQLSchema({ query: RootQuery });
+exports.default = new graphql_1.GraphQLSchema({ query: RootQuery, mutation: mutations });
 //# sourceMappingURL=handlers.js.map

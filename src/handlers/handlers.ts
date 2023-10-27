@@ -6,6 +6,10 @@ import {
     GraphQLString,   
 } from 'graphql';
 
+// const bcrypt = require('bcryptjs');
+import {hashSync, compareSync} from 'bcryptjs';
+
+
 import User from '../models/Users';
 import Blog from '../models/Blog';
 import Comment from '../models/Comment';
@@ -51,14 +55,42 @@ const mutations = new GraphQLObjectType({
                 password: {type: new GraphQLNonNull(GraphQLString)},
             },
             async resolve(parent, {name, email, password}) {
-                let existingUser: Document<any, any, any>;
+                let existingUser: Document<any, any, any>; 
                 try {
                     existingUser = await User.findOne({ email });
-                    if (existingUser) return new Error("User already exist")
-                    const user = new User({name, email, password});
+                    if (existingUser) return new Error("User already exists")
+                    //Hash password
+                    const securePassword = hashSync(password)
+                    const user = new User({name, email, password: securePassword});
                     return await user.save();
-                }catch(e) {
-                    return new Error("User Signup Failed. Try again");
+                } catch(e) {
+                    return new Error(`User Signup Failed. Try again ${e}`);
+                    
+                }
+            }
+        },
+        // user login
+        login: {
+            type: UserType,
+            args: {
+                email: {type: new GraphQLNonNull(GraphQLString)},
+                password: {type: new GraphQLNonNull(GraphQLString)},
+            },
+            async resolve(parent, {email, password}) {
+                let existingUser: Document<any, any, any>;
+                try {
+                    existingUser = await User.findOne({email})
+                    if(!existingUser) 
+                    return new Error("No user Registered with this email");
+                    const decryptedPassword = compareSync(
+                        password,
+                        // @ts-ignore                        
+                        existingUser?.password);
+                    if(!decryptedPassword)
+                    return new Error("Incorrect password")
+                    return existingUser;
+                } catch (err) {
+                    console.log(err.message);
                     
                 }
             }
@@ -67,4 +99,4 @@ const mutations = new GraphQLObjectType({
 })
  
 
-export default new GraphQLSchema({query: RootQuery});
+export default new GraphQLSchema({query: RootQuery, mutation: mutations});

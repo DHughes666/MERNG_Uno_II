@@ -162,7 +162,7 @@ const mutations = new graphql_1.GraphQLObjectType({
                     existingUser.blogs.pull(existingBlog);
                     await existingUser.save({ session });
                     //@ts-ignore
-                    return await existingBlog.deleteOne({ session });
+                    return await existingBlog.deleteOne({ id: existingBlog.id });
                 }
                 catch (e) {
                     console.log(e.message);
@@ -231,7 +231,7 @@ const mutations = new graphql_1.GraphQLObjectType({
                     await existingUser.save({ session });
                     await existingBlog.save({ session });
                     //@ts-ignore
-                    return await comment.deleteOne({ session });
+                    return await comment.deleteOne({ id: comment.id });
                 }
                 catch (err) {
                     return new Error(err.message);

@@ -4,6 +4,7 @@ import {
     GraphQLSchema,
     GraphQLNonNull,
     GraphQLString,   
+    GraphQLID,
 } from 'graphql';
 
 // const bcrypt = require('bcryptjs');
@@ -15,6 +16,8 @@ import Blog from '../models/Blog';
 import Comment from '../models/Comment';
 import { UserType, BlogType, CommentType } from '../schema/schema';
 import {Document} from "mongoose";
+
+let DocumentType = Document<any, any, any>;
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
@@ -55,7 +58,7 @@ const mutations = new GraphQLObjectType({
                 password: {type: new GraphQLNonNull(GraphQLString)},
             },
             async resolve(parent, {name, email, password}) {
-                let existingUser: Document<any, any, any>; 
+                let existingUser: DocumentType;
                 try {
                     existingUser = await User.findOne({ email });
                     if (existingUser) return new Error("User already exists")
@@ -77,7 +80,7 @@ const mutations = new GraphQLObjectType({
                 password: {type: new GraphQLNonNull(GraphQLString)},
             },
             async resolve(parent, {email, password}) {
-                let existingUser: Document<any, any, any>;
+                let existingUser: DocumentType;
                 try {
                     existingUser = await User.findOne({email})
                     if(!existingUser) 
@@ -107,6 +110,47 @@ const mutations = new GraphQLObjectType({
                 try {
                     blog = new Blog({title, content})
                     return await blog.save();
+                } catch (e) {
+                    console.log(e.message);
+                    
+                }
+            }
+        }, 
+        updateBlog: {
+            type: BlogType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID)},
+                title: { type: new GraphQLNonNull(GraphQLString)},
+                content: { type: new GraphQLNonNull(GraphQLString)},
+            },
+            async resolve(parent, {id, title, content}){
+                let existingBlog: DocumentType;
+                try {
+                    existingBlog = await Blog.findById(id);
+                    if (!existingBlog) return new Error("Blog does not exist");
+                    return await Blog.findByIdAndUpdate(id, {
+                        title, content
+                    }, 
+                    {new: true}
+                    )
+                    
+                } catch (e) {
+                    console.log(e.message);
+                    
+                }
+            }
+        },
+        deleteBlog: {
+            type: BlogType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID)},
+            },
+            async resolve(parent, {id}) {
+                let existingBlog: DocumentType;
+                try {
+                    existingBlog = await Blog.findById(id);
+                    if(!existingBlog) return new Error("No blog found")
+                    return await Blog.findByIdAndRemove(id);
                 } catch (e) {
                     console.log(e.message);
                     

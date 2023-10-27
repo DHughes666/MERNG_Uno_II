@@ -10,6 +10,8 @@ const Users_1 = __importDefault(require("../models/Users"));
 const Blog_1 = __importDefault(require("../models/Blog"));
 const Comment_1 = __importDefault(require("../models/Comment"));
 const schema_1 = require("../schema/schema");
+const mongoose_1 = require("mongoose");
+let DocumentType = (mongoose_1.Document);
 const RootQuery = new graphql_1.GraphQLObjectType({
     name: 'RootQuery',
     fields: {
@@ -100,6 +102,46 @@ const mutations = new graphql_1.GraphQLObjectType({
                 try {
                     blog = new Blog_1.default({ title, content });
                     return await blog.save();
+                }
+                catch (e) {
+                    console.log(e.message);
+                }
+            }
+        },
+        updateBlog: {
+            type: schema_1.BlogType,
+            args: {
+                id: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) },
+                title: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
+                content: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
+            },
+            async resolve(parent, { id, title, content }) {
+                let existingBlog;
+                try {
+                    existingBlog = await Blog_1.default.findById(id);
+                    if (!existingBlog)
+                        return new Error("Blog does not exist");
+                    return await Blog_1.default.findByIdAndUpdate(id, {
+                        title, content
+                    }, { new: true });
+                }
+                catch (e) {
+                    console.log(e.message);
+                }
+            }
+        },
+        deleteBlog: {
+            type: schema_1.BlogType,
+            args: {
+                id: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) },
+            },
+            async resolve(parent, { id }) {
+                let existingBlog;
+                try {
+                    existingBlog = await Blog_1.default.findById(id);
+                    if (!existingBlog)
+                        return new Error("No blog found");
+                    return await Blog_1.default.findByIdAndRemove(id);
                 }
                 catch (e) {
                     console.log(e.message);

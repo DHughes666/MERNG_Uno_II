@@ -94,6 +94,24 @@ const mutations = new GraphQLObjectType({
                     
                 }
             }
+        },
+        addBlog: {
+            type: BlogType,
+            args: {
+                title: { type: new GraphQLNonNull(GraphQLString)},
+                content: { type: new GraphQLNonNull(GraphQLString)},
+                // date: { type: new GraphQLNonNull(GraphQLString)},
+            }, 
+            async resolve(parent, {title, content}){
+                let blog: Document<any, any, any>;
+                try {
+                    blog = new Blog({title, content})
+                    return await blog.save();
+                } catch (e) {
+                    console.log(e.message);
+                    
+                }
+            }
         }
     }
 })

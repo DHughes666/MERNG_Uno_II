@@ -12,7 +12,7 @@ const blogSchema = new mongoose_1.Schema({
     },
     date: {
         type: Date,
-        required: true,
+        default: Date.now()
     },
 });
 exports.default = (0, mongoose_1.model)("Blog", blogSchema);

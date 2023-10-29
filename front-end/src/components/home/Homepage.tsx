@@ -8,11 +8,21 @@ const Homepage = () => {
             <Box sx={homepageStyles.wrapper}>
                 <Typography>
                     Write and Share your Blog with Millions of People
-                    <FaBlogger />
+                    <img src="images/1.jpg" alt="homepage" />
                 </Typography>
             </Box>
-            <Box sx={homepageStyles.wrapper}></Box>
-            <Box sx={homepageStyles.wrapper}></Box>
+            <Box sx={homepageStyles.wrapper}>
+                <Typography>
+                    Write and Share your Blog with Millions of People
+                    <img src="images/1.jpg" alt="homepage" />
+                </Typography>
+            </Box>
+            <Box sx={homepageStyles.wrapper}>
+                <Typography>
+                    Write and Share your Blog with Millions of People
+                    <img src="images/1.png" alt="homepage" />
+                </Typography>
+            </Box>
         </Box>
         
     )

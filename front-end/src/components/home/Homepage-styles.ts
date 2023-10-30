@@ -19,10 +19,14 @@ export const homepageStyles:Styles = {
     },
     text: {
         fontSize: {
-            lg: '50',
-            md: '40',
-            sm: '35',
-            xs: '20px',
+            lg: 50,
+            md: 40,
+            sm: 35,
+            xs: 20,
         },
+    },
+    image: {
+        boxShadow: "10px 10px 25px #000",
+        borderRadius: 20,
     }
 }

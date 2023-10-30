@@ -6,21 +6,36 @@ const Homepage = () => {
     return (
         <Box sx={homepageStyles.container}>
             <Box sx={homepageStyles.wrapper}>
-                <Typography>
+                    <img 
+                        width="50%" 
+                        height="50%" 
+                        //@ts-ignore
+                        style={homepageStyles.image} src="images/1.jpg" alt="homepage" 
+                    />
+                <Typography sx={homepageStyles.text}>
                     Write and Share your Blog with Millions of People
-                    <img src="images/1.jpg" alt="homepage" />
                 </Typography>
             </Box>
             <Box sx={homepageStyles.wrapper}>
-                <Typography>
+                    <img 
+                        width="50%" 
+                        height="50%"
+                        //@ts-ignore 
+                        style={homepageStyles.image} src="images/2.jpg" alt="homepage" 
+                    />
+                <Typography sx={homepageStyles.text}>
                     Write and Share your Blog with Millions of People
-                    <img src="images/1.jpg" alt="homepage" />
                 </Typography>
             </Box>
             <Box sx={homepageStyles.wrapper}>
-                <Typography>
+                    <img 
+                        width="50%" 
+                        height="50%" 
+                        //@ts-ignore
+                        style={homepageStyles.image} src="images/3.jpg" alt="homepage" 
+                    />
+                <Typography sx={homepageStyles.text}>
                     Write and Share your Blog with Millions of People
-                    <img src="images/1.png" alt="homepage" />
                 </Typography>
             </Box>
         </Box>

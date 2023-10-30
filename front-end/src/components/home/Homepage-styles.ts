@@ -1,6 +1,6 @@
 import {SxProps} from '@mui/material';
 
-type Styles = {
+export type Styles = {
     [key: string]: SxProps;
 }
 
@@ -8,7 +8,6 @@ export const homepageStyles:Styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        padding: 6,
         gap: 10,
     },
     wrapper: {
@@ -16,6 +15,7 @@ export const homepageStyles:Styles = {
         justifyContent: 'center',
         gap: 4, 
         alignItems: 'center',
+        padding: 6,
     },
     text: {
         fontSize: {
@@ -39,5 +39,16 @@ export const homepageStyles:Styles = {
     },
     footerBtn: {
         borderRadius: 10, 
+        bgcolor: "blueviolet",
+        width: 200,
+        ":hover": {
+            bgcolor: "#bd63fa",
+        }
     },
+    footerText: {
+        fontFamily: "Work Sans",
+        fontWeight: "500",
+        fontSize: 20,
+        color: "white",
+    }
 }

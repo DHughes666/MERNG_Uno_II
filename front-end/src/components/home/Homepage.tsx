@@ -17,15 +17,15 @@ const Homepage = () => {
                 </Typography>
             </Box>
             <Box sx={homepageStyles.wrapper}>
+                <Typography sx={homepageStyles.text}>
+                    Write and Share your Blog with Millions of People
+                </Typography>
                     <img 
                         width="50%" 
                         height="50%"
                         //@ts-ignore 
                         style={homepageStyles.image} src="images/2.jpg" alt="homepage" 
                     />
-                <Typography sx={homepageStyles.text}>
-                    Write and Share your Blog with Millions of People
-                </Typography>
             </Box>
             <Box sx={homepageStyles.wrapper}>
                     <img 

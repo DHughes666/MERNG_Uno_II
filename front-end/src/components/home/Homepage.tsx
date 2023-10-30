@@ -1,6 +1,6 @@
 import {Box, Typography} from '@mui/material'
 import { homepageStyles } from './Homepage-styles';
-import {FaBlogger} from 'react-icons/fa'
+import Footer from './footer';
 
 const Homepage = () => {
     return (
@@ -38,6 +38,7 @@ const Homepage = () => {
                     Write and Share your Blog with Millions of People
                 </Typography>
             </Box>
+            <Footer />
         </Box>
         
     )

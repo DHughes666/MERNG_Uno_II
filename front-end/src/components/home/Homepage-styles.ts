@@ -28,5 +28,16 @@ export const homepageStyles:Styles = {
     image: {
         boxShadow: "10px 10px 25px #000",
         borderRadius: 20,
-    }
+    },
+    footerContainer: {
+        bgcolor: "#404040",
+        display: 'flex',
+        alignItems: 'center',
+        height: "20vh",
+        justifyContent: 'center',
+        gap: 20,
+    },
+    footerBtn: {
+        borderRadius: 10, 
+    },
 }

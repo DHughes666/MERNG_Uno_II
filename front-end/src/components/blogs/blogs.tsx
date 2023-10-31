@@ -1,5 +1,6 @@
 import {useQuery, useMutation} from '@apollo/client'
 import { GET_BLOGS } from '../graphql/queries';
+import BlogList from './blogList';
 
 const Blogs = () => {
     const { loading, data, error } = useQuery(GET_BLOGS);
@@ -8,7 +9,7 @@ const Blogs = () => {
     console.log(data);
     
     return <div>
-        Blogs
+        <BlogList blogs={data.blogs}/>
     </div>
 };
 

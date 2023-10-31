@@ -9,6 +9,8 @@ export const GET_BLOGS = gql`
             name
             email
         }
+        content
+        date
     }
 }
 `;

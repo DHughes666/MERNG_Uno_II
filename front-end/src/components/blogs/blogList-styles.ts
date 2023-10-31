@@ -1,18 +1,39 @@
 import { Styles } from "../home/Homepage-styles";
 
+const colors = [
+    "#FF9800", 
+    "#FF5722", 
+    "#607D88", 
+    "#4CAF50", 
+    "#8BC34A", 
+    "#40C4FF", 
+    "#02778D", 
+    "#4DB6AC", 
+    "#009688",
+    "#448AFF", 
+    "#42A5F5", 
+    "#7E57C2", 
+    "#D32F2F", 
+    "#AB47BC", 
+];
+
+export function randomBgColor() {
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
 export const blogStyles: Styles = {
     container: {
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         gap: 10,
         flexWrap: "wrap",
-        mt: 1,
-        mb: 1,
+        m: 2
     },
     card: {
+        width: "400px",
         display: "flex",
         flexDirection: "column",
-        height: "70vh",
+        height: "60vh",
         transition: "transform 1s",
         ":hover": {
             transform: "scale(1.02)",
@@ -25,8 +46,13 @@ export const blogStyles: Styles = {
         height: "35%",
         padding: 1,
     },
+    dateContainer: {
+        display: "flex",
+        alignItems: "center",
+        gap: 2
+    },
     cardContent: {
-        width: "80%",
+        width: "100%",
         height: "100%",
         fontSize: "20px",
         fontWeight: "500",
@@ -39,7 +65,7 @@ export const blogStyles: Styles = {
         textDecoration: "underline",
         textUnderlineOffset: "5px",
         fontFamily: "Work Sans",
-        textShadow: "2px 7px 20px #ccc",
+        textShadow: "2px 7px 20px #000",
     },
     contentText: {
         padding: 2,

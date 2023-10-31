@@ -50,6 +50,9 @@ const Auth = () => {
                 )}                
                 <InputLabel arial-label="email"></InputLabel>
                 <TextField 
+                helperText={
+                    Boolean(errors.email) ? "Invalid email" : ""
+                }
                 error={Boolean(errors.email)}
                 margin="normal"
                 InputProps={{style: {borderRadius: 10}}}
@@ -64,6 +67,9 @@ const Auth = () => {
                 <InputLabel arial-label="password"></InputLabel>
                 <TextField 
                 error={Boolean(errors.password)} 
+                helperText={
+                    Boolean(errors.password) ? "6 or more characters required" : ""
+                } 
                 margin="normal"
                 InputProps={{style: {borderRadius: 10}}}
                 arial-label="password" label="Password" type="password"

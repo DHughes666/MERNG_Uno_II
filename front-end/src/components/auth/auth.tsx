@@ -4,21 +4,38 @@ import { Box, Typography, TextField, InputLabel,
 import { ImBlogger } from "react-icons/im"
 import { authStyles } from "./auth-styles";
 import { useForm, SubmitHandler } from "react-hook-form"
+import {useMutation} from '@apollo/client'
+import { USER_LOGIN } from "../graphql/mutations";
 
+type Inputs = {
+    name: string
+    email: string
+    password: string
+}
 
 const Auth = () => {
     const {
         register, 
         formState: {errors}, 
         handleSubmit
-    } = useForm();
+    } = useForm<Inputs>();
+
+
+    const [login, loginResponse] = useMutation(USER_LOGIN);
     const theme = useTheme();
     const isBeloMd = useMediaQuery(theme.breakpoints.down("md"));
     const [isSignup, setIsSignup] = useState(false)
     
-    const onSubmit = (data: any) => {
-        console.log(data);
-        
+    const onSubmit = async ({name, email, password}: Inputs) => {
+             if (isSignup) {
+                //signup
+             } else {
+                // login
+                await login({variables: {email, password}})
+                .then(() => {
+                    console.log(loginResponse);
+                })
+             }
     }
 
     return <Box sx={authStyles.container}>

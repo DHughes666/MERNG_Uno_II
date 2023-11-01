@@ -1,4 +1,4 @@
-import {useQuery, useMutation} from '@apollo/client'
+import {useQuery} from '@apollo/client'
 import { GET_BLOGS } from '../graphql/queries';
 import BlogList from './blogList';
 

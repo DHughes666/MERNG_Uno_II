@@ -8,6 +8,7 @@ import {useMutation} from '@apollo/client'
 import { USER_LOGIN, USER_SIGNUP } from "../graphql/mutations";
 import {useDispatch, useSelector} from "react-redux"
 import { authActions } from "../../store/auth-slice";
+import { useNavigate } from "react-router-dom";
 
 type Inputs = {
     name: string
@@ -16,6 +17,7 @@ type Inputs = {
 }
 
 const Auth = () => {
+    const navigate = useNavigate();
     const isLoggedIn = useSelector((state: any) => state.isLoggedIn)
     console.log(isLoggedIn);
     const {
@@ -33,19 +35,21 @@ const Auth = () => {
 
     const onResReceived = (data: any) => {
         if (data.signup){
-            //blabla
+            //store data in local storage if signup is successful
             const {id, email, name} = data.signup;
             localStorage.setItem("userData", JSON.stringify({
                 id, name, email
             }));
         } else {
-            //blablabla
+            //store data in localStorage if login is successful
             const {id, name, email} = data.login;
             localStorage.setItem("userData", JSON.stringify({
                 id, name, email
             }));
         }
         dispatch(authActions.login());
+        //redirect to blogs page if logged in
+        return navigate("/blogs");
     }
     
     const onSubmit = async ({name, email, password}: Inputs) => {

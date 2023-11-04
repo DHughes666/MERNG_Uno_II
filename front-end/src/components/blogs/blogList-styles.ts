@@ -58,7 +58,7 @@ export const blogStyles: Styles = {
         fontWeight: "500",
     },
     title: {
-        fontWeight: "400",
+        fontWeight: "600",
         m: 1,
         color: "white",
         textTransform: "uppercase",

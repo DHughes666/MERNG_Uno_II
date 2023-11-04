@@ -5,7 +5,9 @@ import { ImBlogger } from "react-icons/im"
 import { authStyles } from "./auth-styles";
 import { useForm, SubmitHandler } from "react-hook-form"
 import {useMutation} from '@apollo/client'
-import { USER_LOGIN } from "../graphql/mutations";
+import { USER_LOGIN, USER_SIGNUP } from "../graphql/mutations";
+import {useDispatch, useSelector} from "react-redux"
+import { authActions } from "../../store/auth-slice";
 
 type Inputs = {
     name: string
@@ -14,27 +16,50 @@ type Inputs = {
 }
 
 const Auth = () => {
+    const isLoggedIn = useSelector((state: any) => state.isLoggedIn)
+    console.log(isLoggedIn);
     const {
         register, 
         formState: {errors}, 
         handleSubmit
     } = useForm<Inputs>();
 
-
-    const [login, loginResponse] = useMutation(USER_LOGIN);
+    const dispatch = useDispatch( );
+    const [login] = useMutation(USER_LOGIN);
+    const [signup] = useMutation(USER_SIGNUP);
     const theme = useTheme();
     const isBeloMd = useMediaQuery(theme.breakpoints.down("md"));
     const [isSignup, setIsSignup] = useState(false)
+
+    const onResReceived = (data: any) => {
+        dispatch(authActions.login());
+    }
     
     const onSubmit = async ({name, email, password}: Inputs) => {
              if (isSignup) {
                 //signup
+                try{
+                    const res = await signup({variables: {name, email, password}})
+                    if(res.data){
+                        onResReceived(res.data);
+                    }
+                } catch (err: any){
+                   console.log(err.message);                    
+                }
+                
              } else {
                 // login
-                await login({variables: {email, password}})
-                .then(() => {
-                    console.log(loginResponse);
-                })
+                try{
+                    const res = await login({variables: {email, password}})
+                    if(res.data){
+                        onResReceived(res.data);
+                        console.log(res.data);
+                        
+                    }
+                } catch (err: any){
+                    console.log(err.message);
+                    
+                }
              }
     }
 

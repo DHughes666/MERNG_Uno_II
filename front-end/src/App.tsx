@@ -4,8 +4,12 @@ import Header from "./components/header/header";
 import Auth from "./components/auth/auth";
 import Footer from "./components/home/footer";
 import {Routes, Route} from "react-router-dom";
+import {useSelector} from "react-redux"
 
 function App() {
+  const isLoggedIn = useSelector((state: any) => state.isLoggedIn)
+  console.log(isLoggedIn);
+  
   return (
     <div>
       <header>

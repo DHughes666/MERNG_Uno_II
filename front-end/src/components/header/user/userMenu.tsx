@@ -2,7 +2,7 @@ import {useState} from 'react'
 import { Box, IconButton, Menu, MenuItem,
 Typography } from "@mui/material";
 import { FaUserNurse } from "react-icons/fa";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../../store/auth-slice';
 

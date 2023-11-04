@@ -17,7 +17,7 @@ export const BlogItem = (props: Props) => {
                     {new Date (Number(props.blog.date)).toDateString()}
                 </Typography>
             </Box>
-            <Typography variant="h4" sx={blogStyles.title}>
+            <Typography variant="h4" fontSize={'40%'} sx={blogStyles.title}>
                 {props.blog.title}
             </Typography>
         </Box>

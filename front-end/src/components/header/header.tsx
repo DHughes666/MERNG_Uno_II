@@ -4,8 +4,11 @@ import { ImBlogger } from "react-icons/im"
 import { headerStyles } from "./header-styles";
 import { BiLogInCircle } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import UserMenu from './user/userMenu'
 
 const Header = () => {
+    const isLoggedIn = useSelector((state:any) =>state.isLoggedIn)
     const [value, setValue] = useState(0)
     return <AppBar sx={headerStyles.appBar}>
         <Toolbar>
@@ -28,12 +31,14 @@ const Header = () => {
                     {/** @ts-ignore */}
                     <Tab LinkComponent={Link} to="/blogs" label="Blogs"/>
                 </Tabs>
-                {/* Method II of linking routes */}
+                {isLoggedIn ? (<UserMenu/>) : (
+                    //Method II of linking routes 
                 <Link style={{textDecoration: "none"}} to="/auth">
                     <Button endIcon={<BiLogInCircle />} sx={headerStyles.authBtn}>
                         Auth
                     </Button>
-                </Link>
+                </Link>)
+                }
             </Box>
         </Toolbar>
     </AppBar>

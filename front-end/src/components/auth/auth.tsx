@@ -32,6 +32,19 @@ const Auth = () => {
     const [isSignup, setIsSignup] = useState(false)
 
     const onResReceived = (data: any) => {
+        if (data.signup){
+            //blabla
+            const {id, email, name} = data.signup;
+            localStorage.setItem("userData", JSON.stringify({
+                id, name, email
+            }));
+        } else {
+            //blablabla
+            const {id, name, email} = data.login;
+            localStorage.setItem("userData", JSON.stringify({
+                id, name, email
+            }));
+        }
         dispatch(authActions.login());
     }
     

@@ -37,6 +37,14 @@ const RootQuery = new graphql_1.GraphQLObjectType({
                 return await Blog_1.default.find();
             }
         },
+        // Get blog by id
+        blog: {
+            type: schema_1.BlogType,
+            args: { id: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) } },
+            async resolve(parent, { id }) {
+                return await Blog_1.default.findById(id).populate("user comments");
+            }
+        },
         // Get all comments
         comments: {
             type: new graphql_1.GraphQLList(schema_1.CommentType),

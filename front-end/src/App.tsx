@@ -9,6 +9,7 @@ import {useSelector, useDispatch} from "react-redux"
 import { authActions } from './store/auth-slice';
 import Profile from './components/header/user/profile';
 import AddBlog from './components/blogs/addBlog';
+import ViewBlog from './components/blogs/viewBlog';
 
 function App() {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ function App() {
           <Route path="/auth" element={<Auth/>}/>
           <Route path="/profile" element={<Profile/>}/>
           <Route path="/addblog" element={<AddBlog/>}/>
+          <Route path="/blog/view/:id" element={<ViewBlog/>}/>
         </Routes>
       </main>
       <footer>

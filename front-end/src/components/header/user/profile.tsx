@@ -1,24 +1,36 @@
 //@ts-nocheck
-import { Box, Typography, Avatar } from "@mui/material";
+import { Box, Typography, Avatar, LinearProgress } from "@mui/material";
 import { profileStyles } from "./profile-styles";
 import { BlogItem } from "../../blogs/blogItem";
-import {RxAvatar} from 'react-icons/rx'
+import { useQuery } from "@apollo/client";
+import { GET_USER_BLOGS } from "../../graphql/queries";
 
 const Profile = () => {
-  return (
+    const {loading, data, error} = useQuery(GET_USER_BLOGS, {
+        variables: {
+            id: JSON.parse(localStorage.getItem('userData') as string).id,
+        },
+    }
+        );
+
+    if(error) {
+        return <p>ERROR</p>
+    }
+        
+  return loading ? <LinearProgress/> : data && (
     <Box sx={profileStyles.container}>
         <Box sx={profileStyles.blogsContainer}>
             <Typography variant="h3" sx={profileStyles.text}>
                 My Posts
             </Typography>
             <Box sx={profileStyles.cardsContainer}>
-                {[1, 2, 3, 4, 5].map((item) => (
-                    <BlogItem  
+                {data.user.blogs.map((item) => (
+                    <BlogItem key={item.id}
                     blog={{
-                        title: item.toString(),
-                        content: item.toString(),
-                        date: new Date(),
-                        id: item.toString(),
+                        title: item.title,
+                        content: item.content,
+                        date: item.date,
+                        id: item.id,
                     }}
                     />
                 ))}

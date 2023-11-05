@@ -13,7 +13,7 @@ const Profile = () => {
             </Typography>
             <Box sx={profileStyles.cardsContainer}>
                 {[1, 2, 3, 4, 5].map((item) => (
-                    <BlogItem 
+                    <BlogItem  
                     blog={{
                         title: item.toString(),
                         content: item.toString(),
@@ -27,6 +27,15 @@ const Profile = () => {
         <Box sx={profileStyles.profileContainer}>
             <Box sx={profileStyles.userContainer}>
                 <Avatar sx={profileStyles.avatar}></Avatar>
+                <Typography variant="h3" fontFamily="Work Sans">
+                    Des Hughes
+                </Typography>
+                <Typography variant="h4" fontFamily="Work Sans">
+                    graziemolto6@gmail.com
+                </Typography>
+                <Typography variant="h4" fontFamily="monospace">
+                    You wrote {10} Blogs 😉 🙌
+                </Typography>
             </Box>
         </Box>
     </Box>

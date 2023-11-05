@@ -22,6 +22,14 @@ const RootQuery = new graphql_1.GraphQLObjectType({
                 return await Users_1.default.find();
             }
         },
+        // Get user by id
+        user: {
+            type: schema_1.UserType,
+            args: { id: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) } },
+            async resolve(parent, { id }) {
+                return Users_1.default.findById(id).populate("blogs");
+            },
+        },
         // Get all blogs
         blogs: {
             type: new graphql_1.GraphQLList(schema_1.BlogType),

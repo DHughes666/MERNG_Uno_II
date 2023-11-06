@@ -38,6 +38,7 @@ query blog($id: ID!){
             email
         }
         comments{
+            id
             text
             user{
                 name

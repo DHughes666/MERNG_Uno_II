@@ -35,5 +35,55 @@ export const blogPageStyles: Styles = {
         fontSize: "20px",
         textAlign: "justify",
         fontFamily: "Work Sans",
-    }
+    },
+    blogDate: {
+        ml: 'auto', 
+        display: "flex", 
+        gap:2, 
+        alignItems: "center"
+    },
+    avatarr: {
+        padding: 1,
+        color: "red",
+        bgcolor: "transparent",
+    },
+    commentBox: {
+        padding: 4,
+        display: "flex", 
+        alignItems: "center",   
+        gap: 2,
+    },
+    commentInputContainer: {
+        padding: 2,
+        width: "30%",
+        height: "40%",
+    },
+    inputLayout: {
+        display: "flex",
+        gap: 2,
+        alignItems: "center",
+    },
+    textField: {
+        width: "100%",
+    },
+    commentItem: {
+        display: "flex",
+        padding: 1,
+        gap: 1,
+        borderBottom: "1px solid black",
+        margin: 1,
+        alignItems: "center",
+        height: "auto",
+    },
+    commentText: {
+        margin: 2,
+        fontWeight: "600",
+        fontSize: "16px",
+        fontFamily: "arvo",
+    },
+    comments: {
+        display: "flex",
+        flexDirection: "column",
+        
+    },
 } 
